@@ -14,5 +14,4 @@ class CallCell: UITableViewCell {
   @IBOutlet weak var lastName: UILabel!
   @IBOutlet weak var email: UILabel!
   
-  
 }

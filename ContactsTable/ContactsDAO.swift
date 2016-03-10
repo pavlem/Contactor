@@ -15,9 +15,12 @@ class ContactsDAO {
   class func getAllContacts() -> [CNContact] {
     
     
-    let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
+    let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
     let containerId = CNContactStore().defaultContainerIdentifier()
     let predicate: NSPredicate = CNContact.predicateForContactsInContainerWithIdentifier(containerId)
+    
+    
+    
     
     var contacts = [CNContact()]
     
@@ -27,7 +30,7 @@ class ContactsDAO {
     } catch {
       
     }
-
     return contacts
+    
   }
 }

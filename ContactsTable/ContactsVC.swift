@@ -75,14 +75,65 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
       contact = contacts[indexPath.row]
     }
     
-    cell.firstName.text = contact.givenName
-    cell.lastName.text = contact.familyName
+//    cell.fullName.text = contact.givenName
     
-    //    if let emailFirst = contact.emailAddresses.first {
-    ////        cell.email.text = contact.emailAddresses.first!.identifier
-    //        cell.email.text = emailFirst.identifier
-    //    }
+//    let phoneNum = contact.phoneNumbers.first
     
+    
+
+    
+    if (contact.isKeyAvailable(CNContactGivenNameKey)) || (contact.isKeyAvailable(CNContactFamilyNameKey)) || (contact.isKeyAvailable(CNContactPhoneNumbersKey)) || (contact.isKeyAvailable(CNContactThumbnailImageDataKey)) || (contact.isKeyAvailable(CNContactImageDataAvailableKey)) {
+      
+      
+      if contact.imageDataAvailable {
+        print("ddddddddd")
+        
+        
+//        if let big = contact.imageData {
+//          let bigIm = UIImage(data: big)
+//          print(big)
+//        }
+        
+        if let small = contact.thumbnailImageData {
+          let smallI = UIImage(data: small)
+          
+          print(smallI)
+          
+        }
+
+      }
+      
+
+      
+      
+      let givenN = contact.givenName
+      let fName = contact.familyName
+      let fullName = givenN + " " + fName
+      
+      cell.fullName.text = fullName
+      
+      if let phoneNumber = contact.phoneNumbers.first {
+        let phoneNumberString = phoneNumber.value as! CNPhoneNumber
+        cell.phone.text = phoneNumberString.stringValue
+        cell.phone.hidden = false 
+      }
+      
+      
+      if let thumbImage = contact.thumbnailImageData {
+        
+        cell.contactImage.image = UIImage(data:thumbImage)
+        
+//        cell.imageView?.image = UIImage(data:thumbImage)
+        
+        
+        cell.contactImage.layer.cornerRadius = 25.0
+        cell.contactImage.layer.masksToBounds = true
+      }
+      
+
+    }
+    
+ 
     return cell
   }
   

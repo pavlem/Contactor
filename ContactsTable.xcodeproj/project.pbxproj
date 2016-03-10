@@ -29,6 +29,8 @@
 		9E4840781C91AF580067AB27 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4840761C91AF580067AB27 /* Configuration.swift */; };
 		9E48407A1C91B8F80067AB27 /* CallCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4840791C91B8F80067AB27 /* CallCell.swift */; };
 		9E48407B1C91B8F80067AB27 /* CallCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4840791C91B8F80067AB27 /* CallCell.swift */; };
+		9E4840811C91DCFB0067AB27 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E48407F1C91DCFB0067AB27 /* AVFoundation.framework */; };
+		9E4840821C91DCFB0067AB27 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E4840801C91DCFB0067AB27 /* AVKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,8 @@
 		9E4840731C91AF130067AB27 /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		9E4840761C91AF580067AB27 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		9E4840791C91B8F80067AB27 /* CallCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallCell.swift; sourceTree = "<group>"; };
+		9E48407F1C91DCFB0067AB27 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		9E4840801C91DCFB0067AB27 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E4840811C91DCFB0067AB27 /* AVFoundation.framework in Frameworks */,
+				9E4840821C91DCFB0067AB27 /* AVKit.framework in Frameworks */,
 				9E48406C1C91AD840067AB27 /* ContactsUI.framework in Frameworks */,
 				9E48406A1C91AD7E0067AB27 /* Contacts.framework in Frameworks */,
 			);
@@ -102,6 +108,8 @@
 		9E4840291C91AB3E0067AB27 = {
 			isa = PBXGroup;
 			children = (
+				9E48407F1C91DCFB0067AB27 /* AVFoundation.framework */,
+				9E4840801C91DCFB0067AB27 /* AVKit.framework */,
 				9E48406B1C91AD840067AB27 /* ContactsUI.framework */,
 				9E4840691C91AD7E0067AB27 /* Contacts.framework */,
 				9E4840341C91AB3E0067AB27 /* ContactsTable */,
@@ -541,6 +549,7 @@
 				9E48405C1C91AB3F0067AB27 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9E48405D1C91AB3F0067AB27 /* Build configuration list for PBXNativeTarget "ContactsTableTests" */ = {
 			isa = XCConfigurationList;
@@ -549,6 +558,7 @@
 				9E48405F1C91AB3F0067AB27 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9E4840601C91AB3F0067AB27 /* Build configuration list for PBXNativeTarget "ContactsTableUITests" */ = {
 			isa = XCConfigurationList;
@@ -557,6 +567,7 @@
 				9E4840621C91AB3F0067AB27 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

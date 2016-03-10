@@ -10,8 +10,22 @@ import UIKit
 
 class ContactCell: UITableViewCell {
   
-  @IBOutlet weak var firstName: UILabel!
-  @IBOutlet weak var lastName: UILabel!
-  @IBOutlet weak var email: UILabel!
+  @IBOutlet weak var w: NSLayoutConstraint!
+  @IBOutlet weak var h: NSLayoutConstraint!
+  @IBOutlet weak var contactImage: UIImageView!
+  @IBOutlet weak var fullName: UILabel!
+  @IBOutlet weak var phone: UILabel!
+  
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+//    w.constant = 20
+//    h.constant = 20
+  }
+  
+  
+  override func prepareForReuse() {
+    contactImage.image = UIImage(named: "avatar")
+  }
   
 }

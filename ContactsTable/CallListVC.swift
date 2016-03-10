@@ -11,43 +11,31 @@ import Contacts
 import ContactsUI
 
 
-class CallListVC: UITableViewController, CNContactPickerDelegate {
+class CallListVC: UITableViewController, CNContactPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   // MARK: - Properties
   var contacts = [Contact]()
   var filteredContacts = [Contact]()
   let searchController = UISearchController(searchResultsController: nil)
-  
+
+//  var imagePicker: UIImagePickerController!
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
-    super.viewDidLoad()
     
-    //    UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-    //
+    super.viewDidLoad()
     setupSearchController()
     setupTableView()
     getUserData()
+    
+//    imagePicker =  UIImagePickerController()
+//    imagePicker.delegate = self
+//    imagePicker.sourceType = .Camera
+//    self.presentViewController(imagePicker, animated: true, completion: nil)
   }
   
-  override func viewWillAppear(animated: Bool) {
-    super.viewWillAppear(animated)
-    //    tableView.setNeedsDisplay()
-    //    tableView.contentOffset = CGPointMake(0, self.searchController.searchBar.frame.size.height);
-    
-    
-    //    let vc = CNContactPickerViewController()
-    //    //    vc.delegate = self
-    ////        self.presentViewController(vc, animated: true, completion: nil)
-    //    self.navigationController?.pushViewController(vc, animated: true)
-    
-  }
-  
-  
-  
+
   // MARK: - Private
-  
-  
   private func setupSearchController() {
     searchController.searchResultsUpdater = self
     searchController.searchBar.delegate = self
@@ -61,6 +49,9 @@ class CallListVC: UITableViewController, CNContactPickerDelegate {
     getUserDataFromServer()
   }
   
+  private func getMOCData() {
+    
+  }
   
   private func getUserDataFromServer() {
     
@@ -127,6 +118,12 @@ class CallListVC: UITableViewController, CNContactPickerDelegate {
     tableView.backgroundColor = UIColor.whiteColor()
   }
   
+  private func filterContentForSearchText(searchText: String) {
+    filteredContacts = contacts.filter({( contact : Contact) -> Bool in
+      return contact.firstName!.lowercaseString.containsString(searchText.lowercaseString)
+    })
+    tableView.reloadData()
+  }
   
   // MARK: - Delegates
   // MARK: UITableViewDataSource
@@ -147,6 +144,7 @@ class CallListVC: UITableViewController, CNContactPickerDelegate {
       contact = contacts[indexPath.row]
     }
     
+    
     cell.firstName.text = contact.firstName
     cell.lastName.text = contact.lastName
     cell.email.text = contact.email
@@ -154,71 +152,10 @@ class CallListVC: UITableViewController, CNContactPickerDelegate {
     return cell
   }
   
-  @IBAction func test(sender: UIBarButtonItem) {
-    
-    
-    let vc = CNContactPickerViewController()
-    vc.delegate = self
-    self.presentViewController(vc, animated: true, completion: nil)
-    //    self.navigationController?.pushViewController(vc, animated: true)
-    
-    
-    
-    //    let vc = CNContactViewController()
-    //    vc.delegate = self
-    //    self.presentViewController(vc, animated: true, completion: nil)
-    
-    
-    
-    //    self.navigationController?.pushViewController(vc, animated: true)
-    
-    //    let store = CNContactStore()
-    //    let john = CNMutableContact()
-    //    john.givenName = "Pera"
-    //    john.familyName = "Detlic"
-    //    let saveRequest = CNSaveRequest()
-    //    saveRequest.addContact(john, toContainerWithIdentifier: nil)
-    //
-    //
-    //    do {
-    //      try store.executeSaveRequest(saveRequest)
-    //
-    //    } catch {
-    //
-    //    }
-    
-    
-    
-  }
-  // MARK:  UITableViewDelegate Methods
+   // MARK:  UITableViewDelegate Methods
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    
-    
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
   }
-  
-  
-  
-  func filterContentForSearchText(searchText: String) {
-    filteredContacts = contacts.filter({( contact : Contact) -> Bool in
-      return contact.firstName!.lowercaseString.containsString(searchText.lowercaseString)
-    })
-    tableView.reloadData()
-  }
-  
-  
-  
-  func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
-    
-    let newVC = UIViewController()
-    newVC.view.backgroundColor = UIColor.redColor()
-    self.navigationController?.pushViewController(newVC, animated: true)
-    
-    print(contact)
-    
-  }
-  
-  
 }
 
 // MARK: - Extensions
