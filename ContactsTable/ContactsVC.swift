@@ -7,12 +7,44 @@ import Contacts
 import ContactsUI
 
 
+struct contactCustom {
+  var fullName : String?
+  var phoneNumber : String?
+  var imageData: NSData?
+  
+  init(fullName: String, phoneNumber: String) {
+    self.fullName = fullName
+    self.phoneNumber = phoneNumber
+  }
+}
+
+
+
+
 class ContactsVC: UITableViewController, CNContactPickerDelegate {
   
   // MARK: - Properties
   var contacts = [CNContact]()
-  var filteredContacts = [CNContact]()
+  //  var contactsWithSections = [CNContact]()
+  //  var filteredContacts = [CNContact]()
+  
   let searchController = UISearchController(searchResultsController: nil)
+  
+  
+  var contactsLo = [contactCustom]()
+  var filteredContacts = [contactCustom]()
+  
+  
+  
+  var indexTitles = [String]()
+  var contactNames = [String]()
+  
+  //  var sectionDict = [String: [String]]()
+  //  var sectionDict = [String: [contactCustom]]()
+  
+  var dictPaja = [String: [contactCustom]]()
+  
+  
   
   
   // MARK: - Lifecycle
@@ -22,7 +54,10 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     setupSearchController()
     setupTableView()
     getUserData()
+    
+    //    alphabetiseContacts()
   }
+  
   
   
   
@@ -44,8 +79,105 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     for cnContact in cnContacts {
       self.contacts.append(cnContact)
     }
+    
+    
+    
+    
+    for c in self.contacts {
+      
+      let givenN = c.givenName
+      let familyName = c.familyName
+      let fullName = givenN + " " + familyName
+      var phoneNumberString = ""
+      
+      if let phoneNumber = c.phoneNumbers.first {
+        let phoneNumber = phoneNumber.value as! CNPhoneNumber
+        phoneNumberString = phoneNumber.stringValue
+      }
+      
+      
+      contactNames.append(fullName)
+      
+      
+      var contact = contactCustom(fullName: fullName, phoneNumber: phoneNumberString)
+      
+      if let image = c.thumbnailImageData {
+        contact.imageData = image
+      }
+      
+      contactsLo.append(contact)
+      
+    }
+    
+    
+    for (index, element) in contactNames.enumerate() {
+      contactNames[index] = element.uppercaseFirst
+    }
+    
+    var initials = contactNames.initials  // ["A", "B", "C", "D", "F"]
+    initials = initials.unique
+    initials = initials.sort() { $0 < $1 }
+    contactNames = contactNames.sort() { $0 < $1 }
+    
+    
+    self.indexTitles = initials
+    
+    
+  
+    
+    for key in indexTitles {
+      var tempContactsForKey = [contactCustom]()
+      for contact in contactsLo {
+        if key == contact.fullName?.first {
+          tempContactsForKey.append(contact)
+        }
+      }
+      
+      dictPaja[key] = tempContactsForKey
+    }
+    
+    print("sdfsdf")
   }
   
+  
+  //  private func alphabetiseContacts() {
+  //
+  //
+  //
+  //
+  //
+  //
+  ////    self.contacts =  self.contacts.sort() { $0.givenName < $1.givenName }
+  //
+  //
+  //
+  //    for c in self.contacts {
+  //
+  //      let givenN = c.givenName
+  //      let familyName = c.familyName
+  //      let fullName = givenN + " " + familyName
+  //      var phoneNumberString = ""
+  //
+  //      if let phoneNumber = c.phoneNumbers.first {
+  //        let phoneNumber = phoneNumber.value as! CNPhoneNumber
+  //        phoneNumberString = phoneNumber.stringValue
+  //      }
+  //
+  //      var contact = contactCustom(fullName: fullName, phoneNumber: phoneNumberString)
+  //
+  //      if let image = c.thumbnailImageData {
+  //        contact.imageData = image
+  //      }
+  //
+  //      contactsLo.append(contact)
+  //
+  //    }
+  //
+  //
+  //    print("fsdfsdfs")
+  //
+  //
+  //  }
   
   private func setupTableView() {
     tableView.estimatedRowHeight = 68.0
@@ -58,78 +190,130 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
   
   // MARK: - Delegates
   // MARK: UITableViewDataSource
+  override func numberOfSectionsInTableView(tableView:UITableView)->Int {
+    if searchController.active && searchController.searchBar.text != "" {
+      print("searching")
+      return 1
+      
+    }
+    print("not searching")
+    
+    return self.indexTitles.count
+  }
+  
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if searchController.active && searchController.searchBar.text != "" {
       return self.filteredContacts.count
     }
-    return self.contacts.count
+    return self.contactsLo.count
+  }
+  
+  override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+    return self.indexTitles
+  }
+  
+  
+  override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    
+    
+    return indexTitles[section]
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("ContactCell", forIndexPath: indexPath) as! ContactCell
-    var contact = contacts[indexPath.row]
+    //    var contact = contacts[indexPath.row]
+    var contact = contactsLo[indexPath.row]
     
     if searchController.active && searchController.searchBar.text != "" {
       contact = filteredContacts[indexPath.row]
     } else {
-      contact = contacts[indexPath.row]
+      
+      
+      
+      //      NSString *sectionTitle = [animalSectionTitles objectAtIndex:indexPath.section];
+      //      NSArray *sectionAnimals = [animals objectForKey:sectionTitle];
+      //      NSString *animal = [sectionAnimals objectAtIndex:indexPath.row];
+      //      cell.textLabel.text = animal;
+      //      cell.imageView.image = [UIImage imageNamed:[self getImageFilename:animal]];
+      
+      
+      
+      let sectionTitle = indexTitles[indexPath.section]
+      let sectionContacts = dictPaja[sectionTitle]
+      
+      
+//    contact = sectionContacts![indexPath.row]
+      
+      
+      
+      
+      //      contact = contacts[indexPath.row]
+      //      contact = sectionContacts[indexPath.row]
+      
     }
     
-//    cell.fullName.text = contact.givenName
-    
-//    let phoneNum = contact.phoneNumbers.first
     
     
-
+    //------------------------------------------------
+    //    if (contact.isKeyAvailable(CNContactGivenNameKey)) || (contact.isKeyAvailable(CNContactFamilyNameKey)) || (contact.isKeyAvailable(CNContactPhoneNumbersKey)) || (contact.isKeyAvailable(CNContactThumbnailImageDataKey)) || (contact.isKeyAvailable(CNContactImageDataAvailableKey)) {
+    //
+    //
+    //      if contact.imageDataAvailable {
+    //        print("ddddddddd")
+    //
+    //        //        if let big = contact.imageData {
+    //        //          let bigIm = UIImage(data: big)
+    //        //          print(big)
+    //        //        }
+    //
+    //        if let small = contact.thumbnailImageData {
+    //          let smallI = UIImage(data: small)
+    //          print(smallI)
+    //        }
+    //      }
+    //
+    //
+    //
+    //      let givenN = contact.givenName
+    //      let familyName = contact.familyName
+    //      let fullName = givenN + " " + familyName
+    //
+    //      cell.fullName.text = fullName
+    //
+    //      if let phoneNumber = contact.phoneNumbers.first {
+    //        let phoneNumberString = phoneNumber.value as! CNPhoneNumber
+    //        cell.phone.text = phoneNumberString.stringValue
+    //        cell.phone.hidden = false
+    //      }
+    //
+    //
+    //      if let thumbImage = contact.thumbnailImageData {
+    //
+    //        cell.contactImage.image = UIImage(data:thumbImage)
+    //        cell.contactImage.layer.cornerRadius = 25.0
+    //        cell.contactImage.layer.masksToBounds = true
+    //      }
+    //
+    //
+    //      //------------------------------------------------
+    //
+    //
+    //
+    //    }
     
-    if (contact.isKeyAvailable(CNContactGivenNameKey)) || (contact.isKeyAvailable(CNContactFamilyNameKey)) || (contact.isKeyAvailable(CNContactPhoneNumbersKey)) || (contact.isKeyAvailable(CNContactThumbnailImageDataKey)) || (contact.isKeyAvailable(CNContactImageDataAvailableKey)) {
+    cell.fullName.text = contact.fullName
+    cell.phone.text = contact.phoneNumber
+    
+    if let thumbImage = contact.imageData {
       
-      
-      if contact.imageDataAvailable {
-        print("ddddddddd")
-        
-        
-//        if let big = contact.imageData {
-//          let bigIm = UIImage(data: big)
-//          print(big)
-//        }
-        
-        if let small = contact.thumbnailImageData {
-          let smallI = UIImage(data: small)
-          
-          print(smallI)
-          
-        }
-
-      }
-      
-
-      
-      
-      let givenN = contact.givenName
-      let familyName = contact.familyName
-      let fullName = givenN + " " + familyName
-      
-      cell.fullName.text = fullName
-      
-      if let phoneNumber = contact.phoneNumbers.first {
-        let phoneNumberString = phoneNumber.value as! CNPhoneNumber
-        cell.phone.text = phoneNumberString.stringValue
-        cell.phone.hidden = false 
-      }
-      
-      
-      if let thumbImage = contact.thumbnailImageData {
-        
-        cell.contactImage.image = UIImage(data:thumbImage)
-        cell.contactImage.layer.cornerRadius = 25.0
-        cell.contactImage.layer.masksToBounds = true
-      }
-      
-
+      cell.contactImage.image = UIImage(data:thumbImage)
+      cell.contactImage.layer.cornerRadius = 25.0
+      cell.contactImage.layer.masksToBounds = true
     }
     
- 
+    
+    
+    
     return cell
   }
   
@@ -148,7 +332,7 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     controller.contactStore = store
     controller.delegate = self
-//          self.presentViewController(controller, animated:true, completion:nil)
+    //          self.presentViewController(controller, animated:true, completion:nil)
     self.navigationController?.pushViewController(controller, animated: true)
     self.tabBarController?.tabBar.hidden = true
   }
@@ -163,8 +347,12 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
   
   
   func filterContentForSearchText(searchText: String) {
-    filteredContacts = contacts.filter({( contact : CNContact) -> Bool in
-      return contact.givenName.lowercaseString.containsString(searchText.lowercaseString)
+    //    filteredContacts = contacts.filter({( contact : CNContact) -> Bool in
+    filteredContacts = contactsLo.filter({( contact : contactCustom) -> Bool in
+      
+      //      return contact.givenName.lowercaseString.containsString(searchText.lowercaseString)
+      return contact.fullName!.lowercaseString.containsString(searchText.lowercaseString)
+      
     })
     tableView.reloadData()
   }
@@ -180,8 +368,6 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     print(contact)
     
   }
-  
-  
 }
 
 // MARK: - Extensions
@@ -216,3 +402,33 @@ extension ContactsVC: CNContactViewControllerDelegate {
   
 }
 
+
+
+extension Array where Element: StringLiteralConvertible {
+  var initials: [String] {
+    return map{String(($0 as! String).characters.prefix(1))}
+  }
+}
+
+
+extension Array where Element : Hashable {
+  var unique: [Element] {
+    return Array(Set(self))
+  }
+}
+
+
+
+
+
+extension String {
+  var first: String {
+    return String(characters.prefix(1))
+  }
+  var last: String {
+    return String(characters.suffix(1))
+  }
+  var uppercaseFirst: String {
+    return first.uppercaseString + String(characters.dropFirst())
+  }
+}

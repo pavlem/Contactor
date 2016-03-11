@@ -10,8 +10,6 @@ import UIKit
 
 class ContactCell: UITableViewCell {
   
-  @IBOutlet weak var w: NSLayoutConstraint!
-  @IBOutlet weak var h: NSLayoutConstraint!
   @IBOutlet weak var contactImage: UIImageView!
   @IBOutlet weak var fullName: UILabel!
   @IBOutlet weak var phone: UILabel!
@@ -19,8 +17,6 @@ class ContactCell: UITableViewCell {
   
   override func awakeFromNib() {
     super.awakeFromNib()
-//    w.constant = 20
-//    h.constant = 20
   }
   
   
