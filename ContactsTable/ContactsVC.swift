@@ -107,8 +107,8 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
       
       
       let givenN = contact.givenName
-      let fName = contact.familyName
-      let fullName = givenN + " " + fName
+      let familyName = contact.familyName
+      let fullName = givenN + " " + familyName
       
       cell.fullName.text = fullName
       
@@ -122,10 +122,6 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
       if let thumbImage = contact.thumbnailImageData {
         
         cell.contactImage.image = UIImage(data:thumbImage)
-        
-//        cell.imageView?.image = UIImage(data:thumbImage)
-        
-        
         cell.contactImage.layer.cornerRadius = 25.0
         cell.contactImage.layer.masksToBounds = true
       }
