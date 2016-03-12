@@ -36,11 +36,10 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
   
   
   
-  var indexTitles = [String]()
+  var contactSectionTitles = [String]()
   var contactNames = [String]()
   
-  //  var sectionDict = [String: [String]]()
-  //  var sectionDict = [String: [contactCustom]]()
+
   
   var dictPaja = [String: [contactCustom]]()
   
@@ -120,12 +119,12 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     contactNames = contactNames.sort() { $0 < $1 }
     
     
-    self.indexTitles = initials
+    self.contactSectionTitles = initials
     
     
   
     
-    for key in indexTitles {
+    for key in contactSectionTitles {
       var tempContactsForKey = [contactCustom]()
       for contact in contactsLo {
         if key == contact.fullName?.first {
@@ -198,25 +197,41 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     }
     print("not searching")
     
-    return self.indexTitles.count
+    return self.contactSectionTitles.count
   }
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if searchController.active && searchController.searchBar.text != "" {
       return self.filteredContacts.count
     }
-    return self.contactsLo.count
+    
+    
+    
+    
+    let sectionTitle = contactSectionTitles[section]
+    let sectionContacts = dictPaja[sectionTitle]!
+    
+    return sectionContacts.count
+    
+    
+    
+//    return self.contactsLo.count
+    
+    // Return the number of rows in the section.
+//    NSString *sectionTitle = [animalSectionTitles objectAtIndex:section];
+//    NSArray *sectionAnimals = [animals objectForKey:sectionTitle];
+//    return [sectionAnimals count];
   }
   
   override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
-    return self.indexTitles
+    return self.contactSectionTitles
   }
   
   
   override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     
     
-    return indexTitles[section]
+    return contactSectionTitles[section]
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -238,10 +253,10 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
       
       
       
-      let sectionTitle = indexTitles[indexPath.section]
-      let sectionContacts = dictPaja[sectionTitle]
+      let sectionTitle = contactSectionTitles[indexPath.section]
+      let sectionContacts = dictPaja[sectionTitle]!
       
-      
+      contact = sectionContacts[indexPath.row]
 //    contact = sectionContacts![indexPath.row]
       
       
