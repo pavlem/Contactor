@@ -18,7 +18,6 @@ class CallListVC: UITableViewController, CNContactPickerDelegate, UIImagePickerC
   var filteredContacts = [Contact]()
   let searchController = UISearchController(searchResultsController: nil)
 
-//  var imagePicker: UIImagePickerController!
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -77,11 +76,11 @@ class CallListVC: UITableViewController, CNContactPickerDelegate, UIImagePickerC
           if let usersJson = json as? [[String: AnyObject]] {
             for user in usersJson {
               
-              if let idUser = user["id"] as? Int? {
+              if let _ = user["id"] as? Int? {
                 if let name = user["name"] as? String {
                   if let email = user["email"] as? String {
                     if let company = user["company"] as? [String : AnyObject]  {
-                      if let catchPhrase = company["catchPhrase"] as? String {
+                      if let _ = company["catchPhrase"] as? String {
                         let contact = Contact(firstName: name, lastName: name, email: email)
                         
                         self.contacts.append(contact)
@@ -154,8 +153,36 @@ class CallListVC: UITableViewController, CNContactPickerDelegate, UIImagePickerC
   
    // MARK:  UITableViewDelegate Methods
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    
+    
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    
+    
+    
+    
+    
+    
+    createActionSheet(indexPath)
+    
+    
+    
   }
+  
+  
+  
+  private func createActionSheet(indexPath: NSIndexPath) {
+    
+    print(indexPath.section)
+    print(indexPath.row)
+
+    
+  }
+  
+  
+  
+  
+  
+  
 }
 
 // MARK: - Extensions

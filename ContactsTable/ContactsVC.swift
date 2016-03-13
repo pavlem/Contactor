@@ -58,7 +58,11 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
   }
   
   
-  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    self.tabBarController?.tabBar.hidden = false
+  }
   
   
   // MARK: - Private
@@ -357,6 +361,8 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    
+    createActionSheet(indexPath)
   }
   
   
@@ -382,6 +388,83 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     print(contact)
     
+  }
+  
+  
+  private func sendSmsToContact(contact:contactCustom) {
+    let newVC = UIViewController()
+    newVC.view.backgroundColor = UIColor.redColor()
+    
+    self.navigationController?.pushViewController(newVC, animated: true)
+    self.navigationItem.title = contact.fullName
+
+    
+    self.tabBarController?.tabBar.hidden = true
+
+    print(contact.fullName)
+  }
+  
+  private func callContact(contact:contactCustom) {
+    
+    let newVC = UIViewController()
+    newVC.view.backgroundColor = UIColor.greenColor()
+    self.navigationController?.pushViewController(newVC, animated: true)
+    
+    self.navigationItem.title = contact.fullName
+    
+    self.tabBarController?.tabBar.hidden = true
+
+    print(contact.fullName)
+  }
+  
+  
+  private func createActionSheet(indexPath: NSIndexPath) {
+    
+    var contact = contactCustom(fullName: "", phoneNumber: "")
+    
+    if searchController.active && searchController.searchBar.text != "" {
+      contact = filteredContacts[indexPath.row]
+    } else {
+      let sectionTitle = contactSectionTitles[indexPath.section]
+      let sectionContacts = dictPaja[sectionTitle]!
+      
+      contact = sectionContacts[indexPath.row]
+      
+    }
+    
+    
+    
+    // 1
+    let optionMenu = UIAlertController(title: nil, message: contact.fullName, preferredStyle: .ActionSheet)
+    
+    // 2
+    let callAction = UIAlertAction(title: "PHONE", style: .Default, handler: {
+      (alert: UIAlertAction!) -> Void in
+      self.callContact(contact)
+      print("PHONE")
+    })
+    let smsAction = UIAlertAction(title: "SMS", style: .Default, handler: {
+      (alert: UIAlertAction!) -> Void in
+      
+      self.sendSmsToContact(contact)
+      print("SMS")
+    })
+    
+    //
+    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
+      (alert: UIAlertAction!) -> Void in
+      print("Cancelled")
+    })
+    
+    
+    // 4
+    optionMenu.addAction(callAction)
+    optionMenu.addAction(smsAction)
+    optionMenu.addAction(cancelAction)
+    
+    // 5
+    self.presentViewController(optionMenu, animated: true, completion: nil)
+//    print(contact.fullName)
   }
 }
 
