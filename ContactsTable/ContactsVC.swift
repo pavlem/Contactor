@@ -3,8 +3,6 @@
 //
 
 import UIKit
-import Contacts
-import ContactsUI
 
 class ContactsVC: UITableViewController {
   
