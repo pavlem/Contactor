@@ -11,6 +11,10 @@
 		9E3809AB1C96ADD40070A7DA /* ContactsVC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809A91C96ADD40070A7DA /* ContactsVC2.swift */; };
 		9E3809B01C96BCE30070A7DA /* ContactsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809AF1C96BCE30070A7DA /* ContactsHandler.swift */; };
 		9E3809B11C96BCE30070A7DA /* ContactsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809AF1C96BCE30070A7DA /* ContactsHandler.swift */; };
+		9E3809B31C96E3C50070A7DA /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809B21C96E3C50070A7DA /* String+Extension.swift */; };
+		9E3809B41C96E3C50070A7DA /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809B21C96E3C50070A7DA /* String+Extension.swift */; };
+		9E3809B61C96E3F80070A7DA /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809B51C96E3F80070A7DA /* Array+Extension.swift */; };
+		9E3809B71C96E3F80070A7DA /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3809B51C96E3F80070A7DA /* Array+Extension.swift */; };
 		9E4840361C91AB3E0067AB27 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4840351C91AB3E0067AB27 /* AppDelegate.swift */; };
 		9E48403B1C91AB3E0067AB27 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E4840391C91AB3E0067AB27 /* Main.storyboard */; };
 		9E48403D1C91AB3E0067AB27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E48403C1C91AB3E0067AB27 /* Assets.xcassets */; };
@@ -57,6 +61,8 @@
 /* Begin PBXFileReference section */
 		9E3809A91C96ADD40070A7DA /* ContactsVC2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsVC2.swift; sourceTree = "<group>"; };
 		9E3809AF1C96BCE30070A7DA /* ContactsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactsHandler.swift; path = ../ContactsHandler.swift; sourceTree = "<group>"; };
+		9E3809B21C96E3C50070A7DA /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		9E3809B51C96E3F80070A7DA /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		9E4840321C91AB3E0067AB27 /* ContactsTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E4840351C91AB3E0067AB27 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9E48403A1C91AB3E0067AB27 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -143,6 +149,8 @@
 				9E4840731C91AF130067AB27 /* Contact.swift */,
 				9E48406D1C91AD990067AB27 /* ContactsDAO.swift */,
 				9E4840631C91AC340067AB27 /* ContactsVC.swift */,
+				9E3809B21C96E3C50070A7DA /* String+Extension.swift */,
+				9E3809B51C96E3F80070A7DA /* Array+Extension.swift */,
 				9E3809AF1C96BCE30070A7DA /* ContactsHandler.swift */,
 				9E4840661C91ACEE0067AB27 /* ContactCell.swift */,
 				9E3809A91C96ADD40070A7DA /* ContactsVC2.swift */,
@@ -317,7 +325,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E3809AA1C96ADD40070A7DA /* ContactsVC2.swift in Sources */,
+				9E3809B31C96E3C50070A7DA /* String+Extension.swift in Sources */,
 				9E4840741C91AF130067AB27 /* Contact.swift in Sources */,
+				9E3809B61C96E3F80070A7DA /* Array+Extension.swift in Sources */,
 				9E4840671C91ACEE0067AB27 /* ContactCell.swift in Sources */,
 				9E4840771C91AF580067AB27 /* Configuration.swift in Sources */,
 				9E4840361C91AB3E0067AB27 /* AppDelegate.swift in Sources */,
@@ -334,7 +344,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E3809AB1C96ADD40070A7DA /* ContactsVC2.swift in Sources */,
+				9E3809B41C96E3C50070A7DA /* String+Extension.swift in Sources */,
 				9E4840751C91AF130067AB27 /* Contact.swift in Sources */,
+				9E3809B71C96E3F80070A7DA /* Array+Extension.swift in Sources */,
 				9E4840681C91ACEE0067AB27 /* ContactCell.swift in Sources */,
 				9E4840781C91AF580067AB27 /* Configuration.swift in Sources */,
 				9E48404B1C91AB3E0067AB27 /* ContactsTableTests.swift in Sources */,

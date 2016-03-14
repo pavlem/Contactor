@@ -9,12 +9,9 @@
 import Foundation
 import Contacts
 
-
-
 class ContactsDAO {
   
   class func getAllContacts() -> [CNContact] {
-    
     
     let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey, CNContactImageDataAvailableKey]
     let containerId = CNContactStore().defaultContainerIdentifier()
@@ -29,9 +26,5 @@ class ContactsDAO {
       
     }
     return contacts
-    
   }
-  
-  
-  
 }
