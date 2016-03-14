@@ -7,32 +7,31 @@ import Contacts
 import ContactsUI
 
 
-struct CustomContact {
-  var fullName : String?
-  var phoneNumber : String?
-  var imageData: NSData?
-  
-  init(fullName: String, phoneNumber: String) {
-    self.fullName = fullName
-    self.phoneNumber = phoneNumber
-  }
-}
 
 
 
 
-class ContactsVC: UITableViewController, CNContactPickerDelegate {
+
+class ContactsVC2: UITableViewController, CNContactPickerDelegate {
   
   // MARK: - Properties
+  var cnContacts = [CNContact]()
+  //  var contactsWithSections = [CNContact]()
+  //  var filteredContacts = [CNContact]()
+  
   let searchController = UISearchController(searchResultsController: nil)
   
-//  var cnContacts = [CNContact]()
-  var contacts = [CustomContact]()
-  var contactsFiltered = [CustomContact]()
   
-  var contactsSectionTitles = [String]()
-  var contactsFullNames = [String]()
-  var contactsDictionary = [String: [CustomContact]]()
+  var contactsLo = [CustomContact]()
+  var filteredContacts = [CustomContact]()
+  
+  
+  
+  var contactSectionTitles = [String]()
+  var contactNames = [String]()
+  
+  
+  var dictPaja = [String: [CustomContact]]()
   
   
   // MARK: - Lifecycle
@@ -41,8 +40,9 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     setupSearchController()
     setupTableView()
-    getSystemContacs()
+    getContacts()
   }
+  
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
@@ -60,65 +60,73 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     tableView.contentOffset = CGPointMake(0, self.searchController.searchBar.frame.size.height);
   }
   
-  private func getSystemContacs() {
+  private func getContacts() {
     
-    var cnContacts = ContactsDAO.getAllContacts()
+    let cnContacts = ContactsDAO.getAllContacts()
     
     for cnContact in cnContacts {
-      cnContacts.append(cnContact)
+      self.cnContacts.append(cnContact)
     }
     
-    extractPropertiesFromSystemContacts(cnContacts)
-  }
-  
-  
-  private func extractPropertiesFromSystemContacts(cnContacts: [CNContact]) {
     
-    for cnContact in cnContacts {
-      let givenN = cnContact.givenName
-      let familyName = cnContact.familyName
+    
+    
+    for c in self.cnContacts {
+      
+      let givenN = c.givenName
+      let familyName = c.familyName
       let fullName = givenN + " " + familyName
       var phoneNumberString = ""
       
-      if let phoneNumber = cnContact.phoneNumbers.first {
+      if let phoneNumber = c.phoneNumbers.first {
         let phoneNumber = phoneNumber.value as! CNPhoneNumber
         phoneNumberString = phoneNumber.stringValue
       }
       
-      contactsFullNames.append(fullName)
+      
+      contactNames.append(fullName)
+      
       
       var contact = CustomContact(fullName: fullName, phoneNumber: phoneNumberString)
       
-      if let image = cnContact.thumbnailImageData {
+      if let image = c.thumbnailImageData {
         contact.imageData = image
       }
       
-      contacts.append(contact)
+      contactsLo.append(contact)
+      
     }
     
     
-    for (index, element) in contactsFullNames.enumerate() {
-      contactsFullNames[index] = element.uppercaseFirst
+    for (index, element) in contactNames.enumerate() {
+      contactNames[index] = element.uppercaseFirst
     }
     
-    var initials = contactsFullNames.initials  // ["A", "B", "C", "D", "F"]
+    var initials = contactNames.initials  // ["A", "B", "C", "D", "F"]
     initials = initials.unique
     initials = initials.sort() { $0 < $1 }
-    contactsFullNames = contactsFullNames.sort() { $0 < $1 }
-    self.contactsSectionTitles = initials
+    contactNames = contactNames.sort() { $0 < $1 }
     
-    for key in contactsSectionTitles {
+    
+    self.contactSectionTitles = initials
+    
+    
+    
+    
+    for key in contactSectionTitles {
       var tempContactsForKey = [CustomContact]()
-      for contact in contacts {
+      for contact in contactsLo {
         if key == contact.fullName?.first {
           tempContactsForKey.append(contact)
         }
       }
       
-      contactsDictionary[key] = tempContactsForKey
+      dictPaja[key] = tempContactsForKey
     }
     
+    print("sdfsdf")
   }
+  
   
   
   private func setupTableView() {
@@ -140,46 +148,124 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     }
     print("not searching")
     
-    return self.contactsSectionTitles.count
+    return self.contactSectionTitles.count
   }
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if searchController.active && searchController.searchBar.text != "" {
-      return self.contactsFiltered.count
+      return self.filteredContacts.count
     }
     
-    let sectionTitle = contactsSectionTitles[section]
-    let sectionContacts = contactsDictionary[sectionTitle]!
+    
+    
+    
+    let sectionTitle = contactSectionTitles[section]
+    let sectionContacts = dictPaja[sectionTitle]!
     
     return sectionContacts.count
+    
+    
+    
+    //    return self.contactsLo.count
+    
+    // Return the number of rows in the section.
+    //    NSString *sectionTitle = [animalSectionTitles objectAtIndex:section];
+    //    NSArray *sectionAnimals = [animals objectForKey:sectionTitle];
+    //    return [sectionAnimals count];
   }
   
   override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
-    return self.contactsSectionTitles
+    return self.contactSectionTitles
   }
   
   
   override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     
     
-    return contactsSectionTitles[section]
+    return contactSectionTitles[section]
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("ContactCell", forIndexPath: indexPath) as! ContactCell
     //    var contact = contacts[indexPath.row]
-    var contact = contacts[indexPath.row]
+    var contact = contactsLo[indexPath.row]
     
     if searchController.active && searchController.searchBar.text != "" {
-      contact = contactsFiltered[indexPath.row]
+      contact = filteredContacts[indexPath.row]
     } else {
       
       
-      let sectionTitle = contactsSectionTitles[indexPath.section]
-      let sectionContacts = contactsDictionary[sectionTitle]!
+      
+      //      NSString *sectionTitle = [animalSectionTitles objectAtIndex:indexPath.section];
+      //      NSArray *sectionAnimals = [animals objectForKey:sectionTitle];
+      //      NSString *animal = [sectionAnimals objectAtIndex:indexPath.row];
+      //      cell.textLabel.text = animal;
+      //      cell.imageView.image = [UIImage imageNamed:[self getImageFilename:animal]];
+      
+      
+      
+      let sectionTitle = contactSectionTitles[indexPath.section]
+      let sectionContacts = dictPaja[sectionTitle]!
       
       contact = sectionContacts[indexPath.row]
+      //    contact = sectionContacts![indexPath.row]
+      
+      
+      
+      
+      //      contact = contacts[indexPath.row]
+      //      contact = sectionContacts[indexPath.row]
+      
     }
+    
+    
+    
+    //------------------------------------------------
+    //    if (contact.isKeyAvailable(CNContactGivenNameKey)) || (contact.isKeyAvailable(CNContactFamilyNameKey)) || (contact.isKeyAvailable(CNContactPhoneNumbersKey)) || (contact.isKeyAvailable(CNContactThumbnailImageDataKey)) || (contact.isKeyAvailable(CNContactImageDataAvailableKey)) {
+    //
+    //
+    //      if contact.imageDataAvailable {
+    //        print("ddddddddd")
+    //
+    //        //        if let big = contact.imageData {
+    //        //          let bigIm = UIImage(data: big)
+    //        //          print(big)
+    //        //        }
+    //
+    //        if let small = contact.thumbnailImageData {
+    //          let smallI = UIImage(data: small)
+    //          print(smallI)
+    //        }
+    //      }
+    //
+    //
+    //
+    //      let givenN = contact.givenName
+    //      let familyName = contact.familyName
+    //      let fullName = givenN + " " + familyName
+    //
+    //      cell.fullName.text = fullName
+    //
+    //      if let phoneNumber = contact.phoneNumbers.first {
+    //        let phoneNumberString = phoneNumber.value as! CNPhoneNumber
+    //        cell.phone.text = phoneNumberString.stringValue
+    //        cell.phone.hidden = false
+    //      }
+    //
+    //
+    //      if let thumbImage = contact.thumbnailImageData {
+    //
+    //        cell.contactImage.image = UIImage(data:thumbImage)
+    //        cell.contactImage.layer.cornerRadius = 25.0
+    //        cell.contactImage.layer.masksToBounds = true
+    //      }
+    //
+    //
+    //      //------------------------------------------------
+    //
+    //
+    //
+    //    }
     
     cell.fullName.text = contact.fullName
     cell.phone.text = contact.phoneNumber
@@ -201,10 +287,18 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     let store = CNContactStore()
     let contact = CNMutableContact()
+    //      contact.familyName = ""
+    //      contact.givenName = ""
+    //      let homePhone = CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "301-555-1212"))
+    //      contact.phoneNumbers = [homePhone]
+    //      let controller = CNContactViewController(forUnknownContact: contact)
+    //      let controller = CNContactViewController(forContact: contact)
     let controller = CNContactViewController(forNewContact: contact)
+    
     
     controller.contactStore = store
     controller.delegate = self
+    //          self.presentViewController(controller, animated:true, completion:nil)
     self.navigationController?.pushViewController(controller, animated: true)
     self.tabBarController?.tabBar.hidden = true
   }
@@ -222,7 +316,7 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
   
   func filterContentForSearchText(searchText: String) {
     //    filteredContacts = contacts.filter({( contact : CNContact) -> Bool in
-    contactsFiltered = contacts.filter({( contact : CustomContact) -> Bool in
+    filteredContacts = contactsLo.filter({( contact : CustomContact) -> Bool in
       
       //      return contact.givenName.lowercaseString.containsString(searchText.lowercaseString)
       return contact.fullName!.lowercaseString.containsString(searchText.lowercaseString)
@@ -276,10 +370,10 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     var contact = CustomContact(fullName: "", phoneNumber: "")
     
     if searchController.active && searchController.searchBar.text != "" {
-      contact = contactsFiltered[indexPath.row]
+      contact = filteredContacts[indexPath.row]
     } else {
-      let sectionTitle = contactsSectionTitles[indexPath.section]
-      let sectionContacts = contactsDictionary[sectionTitle]!
+      let sectionTitle = contactSectionTitles[indexPath.section]
+      let sectionContacts = dictPaja[sectionTitle]!
       
       contact = sectionContacts[indexPath.row]
       
@@ -288,7 +382,7 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     
     // 1
-    let optionMenu = UIAlertController(title: nil, message: contact.fullName, preferredStyle: .ActionSheet)
+    let optionMenu = UIAlertController(title: nil, message: contact.fullName, preferredStyle: .Alert)
     
     // 2
     let callAction = UIAlertAction(title: "PHONE", style: .Default, handler: {
@@ -317,12 +411,13 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     // 5
     self.presentViewController(optionMenu, animated: true, completion: nil)
+    //    print(contact.fullName)
   }
 }
 
 // MARK: - Extensions
 // MARK: UISearchResultsUpdating Delegate
-extension ContactsVC: UISearchBarDelegate {
+extension ContactsVC2: UISearchBarDelegate {
   
   func searchBar(searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
     filterContentForSearchText(searchBar.text!)
@@ -330,14 +425,14 @@ extension ContactsVC: UISearchBarDelegate {
 }
 
 // MARK: UISearchResultsUpdating Delegate
-extension ContactsVC: UISearchResultsUpdating {
+extension ContactsVC2: UISearchResultsUpdating {
   func updateSearchResultsForSearchController(searchController: UISearchController) {
     filterContentForSearchText(searchController.searchBar.text!)
   }
 }
 
 // MARK: CNContactViewControllerDelegate
-extension ContactsVC: CNContactViewControllerDelegate {
+extension ContactsVC2: CNContactViewControllerDelegate {
   
   func contactViewController(vc: CNContactViewController, didCompleteWithContact con: CNContact?) {
     print(con)
@@ -352,27 +447,3 @@ extension ContactsVC: CNContactViewControllerDelegate {
   
 }
 
-extension Array where Element: StringLiteralConvertible {
-  var initials: [String] {
-    return map{String(($0 as! String).characters.prefix(1))}
-  }
-}
-
-
-extension Array where Element : Hashable {
-  var unique: [Element] {
-    return Array(Set(self))
-  }
-}
-
-extension String {
-  var first: String {
-    return String(characters.prefix(1))
-  }
-  var last: String {
-    return String(characters.suffix(1))
-  }
-  var uppercaseFirst: String {
-    return first.uppercaseString + String(characters.dropFirst())
-  }
-}
