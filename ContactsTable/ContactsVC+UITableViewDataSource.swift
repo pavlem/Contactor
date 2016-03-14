@@ -35,7 +35,11 @@ extension ContactsVC {
   
   override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     
+    if searchController.active && searchController.searchBar.text != "" {
+      return ""
+    }
     return contactsSectionTitles[section]
+    
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
