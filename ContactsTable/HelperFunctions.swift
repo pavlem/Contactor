@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 func capitalizeFirstLetterInArrayOfStrings(strings: [String]) -> [String] {
   var capitalizedStrings = strings
   for (index, element) in strings.enumerate() {

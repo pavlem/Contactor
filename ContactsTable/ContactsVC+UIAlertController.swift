@@ -42,7 +42,6 @@ extension ContactsVC {
       let sectionContacts = contactsDictionary[sectionTitle]!
       
       contact = sectionContacts[indexPath.row]
-      
     }
     
     // 1

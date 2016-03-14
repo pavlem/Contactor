@@ -25,7 +25,7 @@ class ContactsVC: UITableViewController {
     
     setupSearchController()
     setupTableView()
-    getCustomContactsAndSortThem()
+    getContactsAndSortThem()
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -34,20 +34,6 @@ class ContactsVC: UITableViewController {
   }
   
   // MARK: - Private
-  private func getCustomContactsAndSortThem() {
-    
-    self.contacts = getSystemContactsAndExtractProperties(ContactsDAO.getAllContacts())
-    
-    for customContact in self.contacts {
-      contactsFullNames.append(customContact.fullName!)
-    }
-    
-    contactsFullNames = capitalizeFirstLetterInArrayOfStrings(contactsFullNames)
-    contactsFullNames = contactsFullNames.sort() { $0 < $1 }
-    contactsSectionTitles = getInitialsFromArrayOfStrings(contactsFullNames.initials)
-    contactsDictionary = ContactsHandler.getContactsDictionary(forContactsSectionTitles: self.contactsSectionTitles, fromContactList: self.contacts)
-  }
-  
   private func setupSearchController() {
     searchController.searchResultsUpdater = self
     searchController.searchBar.delegate = self
@@ -64,30 +50,8 @@ class ContactsVC: UITableViewController {
     tableView.tableFooterView!.hidden = true
     tableView.backgroundColor = UIColor.whiteColor()
   }
-  
-  private func getSystemContactsAndExtractProperties(cnContacts: [CNContact]) -> [CustomContact] {
-    var contactsLocal = [CustomContact]()
-    for cnContact in cnContacts {
-      let contactProperties = ContactsHandler.extractPropertiesFromContact(cnContact)
-      var customContact = CustomContact(fullName: contactProperties.fullname, phoneNumber: contactProperties.phoneNumber)
-      if let thumbnailImageData = contactProperties.thumbnailImageData {
-        customContact.imageData = thumbnailImageData
-      }
-      
-      contactsLocal.append(customContact)
-    }
-    return contactsLocal
-  }
-  
-  // MARK: - Public
-  func filterContentForSearchText(searchText: String) {
-    contactsFiltered = contacts.filter({( contact : CustomContact) -> Bool in
-      return contact.fullName!.lowercaseString.containsString(searchText.lowercaseString)
-    })
-    tableView.reloadData()
-  }
-  
-  
+    
+
   // MARK: - Actions
   @IBAction func addContact(sender: AnyObject) {
     let controller = ContactsHandler.createContactVC()

@@ -11,7 +11,16 @@ import UIKit
 
 extension ContactsVC: UISearchResultsUpdating {
   
+  // MARK: - UISearchResultsUpdating
   func updateSearchResultsForSearchController(searchController: UISearchController) {
     filterContentForSearchText(searchController.searchBar.text!)
+  }
+  
+  // MARK: - Public
+  func filterContentForSearchText(searchText: String) {
+    contactsFiltered = contacts.filter({( contact : CustomContact) -> Bool in
+      return contact.fullName!.lowercaseString.containsString(searchText.lowercaseString)
+    })
+    tableView.reloadData()
   }
 }
