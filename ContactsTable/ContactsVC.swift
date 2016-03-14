@@ -34,7 +34,6 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     self.tabBarController?.tabBar.hidden = false
   }
   
-  
   // MARK: - Private
   private func capitalizeFirstLetterInArrayOfStrings(strings: [String]) -> [String] {
     var capitalizedStrings = strings
@@ -83,7 +82,6 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
   }
   
   private func getSystemContactsAndExtractProperties(cnContacts: [CNContact]) -> [CustomContact] {
-    
     var contactsLocal = [CustomContact]()
     for cnContact in cnContacts {
       let contactProperties = ContactsHandler.extractPropertiesFromContact(cnContact)
@@ -94,9 +92,16 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
       
       contactsLocal.append(customContact)
     }
-    
     return contactsLocal
   }
+  
+  private func filterContentForSearchText(searchText: String) {
+    contactsFiltered = contacts.filter({( contact : CustomContact) -> Bool in
+      return contact.fullName!.lowercaseString.containsString(searchText.lowercaseString)
+    })
+    tableView.reloadData()
+  }
+  
   
   // MARK: - Actions
   @IBAction func addContact(sender: AnyObject) {
@@ -114,7 +119,6 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
       return 1
       
     }
-    
     return self.contactsSectionTitles.count
   }
   
@@ -170,19 +174,11 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     return cell
   }
 
-  
   // MARK:  UITableViewDelegate Methods
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     createActionSheet(indexPath)
-  }
-  
-  func filterContentForSearchText(searchText: String) {
-    contactsFiltered = contacts.filter({( contact : CustomContact) -> Bool in
-      return contact.fullName!.lowercaseString.containsString(searchText.lowercaseString)
-    })
-    tableView.reloadData()
   }
   
   func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
