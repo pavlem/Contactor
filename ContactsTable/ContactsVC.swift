@@ -98,6 +98,14 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     return contactsLocal
   }
   
+  // MARK: - Actions
+  @IBAction func addContact(sender: AnyObject) {
+    let controller = ContactsHandler.createContactVC()
+    controller.delegate = self
+    self.navigationController?.pushViewController(controller, animated: true)
+    self.tabBarController?.tabBar.hidden = true
+  }
+  
   
   // MARK: - Delegates
   // MARK: UITableViewDataSource
@@ -161,13 +169,7 @@ class ContactsVC: UITableViewController, CNContactPickerDelegate {
     
     return cell
   }
-  
-  @IBAction func addContact(sender: AnyObject) {
-    let controller = ContactsHandler.createContactVC()
-    controller.delegate = self
-    self.navigationController?.pushViewController(controller, animated: true)
-    self.tabBarController?.tabBar.hidden = true
-  }
+
   
   // MARK:  UITableViewDelegate Methods
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
