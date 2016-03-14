@@ -11,6 +11,8 @@ import UIKit
 
 extension ContactsVC {
   
+  
+  // MARK: - Private
   private func sendSmsToContact(contact:CustomContact) {
     let newVC = UIViewController()
     newVC.view.backgroundColor = UIColor.redColor()
@@ -28,7 +30,7 @@ extension ContactsVC {
   }
   
   
-    
+  // MARK: - Public
   func createActionSheet(indexPath: NSIndexPath) {
     
     var contact = CustomContact(fullName: "", phoneNumber: "")

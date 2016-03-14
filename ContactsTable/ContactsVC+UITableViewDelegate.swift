@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 
-
 extension ContactsVC {
   
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -17,5 +16,4 @@ extension ContactsVC {
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     createActionSheet(indexPath)
   }
-
 }
